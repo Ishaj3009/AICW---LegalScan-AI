@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/legalscan', {
+mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://ishajadhav3005_db_user:LegalScanAI123@cluster0.f136nrs.mongodb.net/?appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => console.log('MongoDB connected'))

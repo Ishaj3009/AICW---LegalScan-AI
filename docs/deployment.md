@@ -10,7 +10,7 @@ LegalScan AI uses a microservices architecture:
 ## Local Setup Without Docker
 
 ### 1. MongoDB
-Ensure MongoDB is running locally on port `27017` or update the `.env` in the backend.
+Ensure MongoDB is running locally on port `5000` or update the `.env` in the backend.
 
 ### 2. Python AI Service
 ```bash
