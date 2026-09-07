@@ -55,8 +55,21 @@ const Violations = () => {
                 </div>
                 
                 <div className="flex flex-col gap-2">
-                  <Button variant="outline" className="text-xs" onClick={() => navigate(`/results/${v.inspectionId?.inspectionId}`)}>View Inspection</Button>
-                  {v.status === 'AI_DETECTED' && (
+  <Button
+    variant="outline"
+    className="text-xs"
+    onClick={() =>
+      navigate(
+        `/results/${
+          v.inspectionId?.inspectionId || v.inspectionId
+        }`
+      )
+    }
+  >
+    View Inspection
+  </Button>
+
+  {v.status === 'AI_DETECTED' && (
                     <>
                       <Button className="text-xs bg-green-600 hover:bg-green-700 border-none" onClick={() => handleReview(v._id, 'CONFIRMED')}>Confirm</Button>
                       <Button variant="outline" className="text-xs text-red-600 hover:bg-red-50" onClick={() => handleReview(v._id, 'REJECTED')}>Reject</Button>

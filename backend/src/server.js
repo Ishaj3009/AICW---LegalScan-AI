@@ -12,6 +12,18 @@ const violationRoutes = require('./routes/violationRoutes');
 const manufacturerRoutes = require('./routes/manufacturerRoutes');
 
 const app = express();
+const path = require('path');
+console.log('SERVER DIR:', __dirname);
+console.log('UPLOADS DIR:', path.join(__dirname, '../../uploads'));
+console.log(
+  'UPLOADS EXISTS:',
+  require('fs').existsSync(path.join(__dirname, '../../uploads'))
+);
+
+app.use(
+  '/uploads',
+  express.static(path.join(__dirname, '../../uploads'))
+);
 
 app.use(cors());
 app.use(express.json());
