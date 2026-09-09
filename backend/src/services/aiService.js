@@ -286,7 +286,9 @@ exports.analyzeImages = async (inspection) => {
           Infinity,
 
         timeout:
-          120000
+          300000,
+          maxContentLength: Infinity,
+        maxBodyLength: Infinity
       }
     );
 
