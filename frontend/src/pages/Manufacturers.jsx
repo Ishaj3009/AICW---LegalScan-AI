@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import { Building2, Search, X, Image as ImageIcon, MapPin, Award, Activity } from 'lucide-react';
-import { useSeedData } from '../context/SeedDataContext';
-
+import { manufacturersAPI } from '../services/api';
 const Manufacturers = () => {
-  const { manufacturers, addManufacturer } = useSeedData();
+  const [manufacturers, setManufacturers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [viewingMfg, setViewingMfg] = useState(null);
   const [formData, setFormData] = useState({ name: '', location: '', license: '', logo: null });
 
-  const handleAddMfg = (e) => {
+
+  useEffect(() => {
+  loadManufacturers();
+}, []);
+
+const loadManufacturers = async () => {
+  try {
+    const response = await manufacturersAPI.getAll();
+
+    if (response.data?.success) {
+      setManufacturers(response.data.data || []);
+    }
+  } catch (error) {
+    console.error('❌ Failed to load manufacturers:', error);
+  }
+};
+
+const handleAddMfg = async (e) => {
     e.preventDefault();
     if (!formData.name) return;
     
@@ -23,7 +39,25 @@ const Manufacturers = () => {
       status: 'Active',
       complianceScore: Math.floor(Math.random() * 20) + 80 // Random score between 80-100
     };
-    addManufacturer(newMfg);
+    try {
+  const response = await manufacturersAPI.create({
+    name: newMfg.name,
+    location: newMfg.location,
+    license: newMfg.license,
+    status: newMfg.status,
+    complianceScore: newMfg.complianceScore
+  });
+
+  if (response.data?.success) {
+    setManufacturers((prev) => [
+      response.data.data,
+      ...prev
+    ]);
+  }
+} catch (error) {
+  console.error('❌ Failed to create manufacturer:', error);
+  return;
+}
     setShowModal(false);
     setFormData({ name: '', location: '', license: '', logo: null });
   };
@@ -51,7 +85,9 @@ const Manufacturers = () => {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-primary">{viewingMfg.name}</h3>
-                  <p className="text-sm text-gray-500 font-medium">ID: {viewingMfg.id}</p>
+                  <p className="text-sm text-gray-500 font-medium">
+  ID: {viewingMfg.manufacturerId}
+</p>
                 </div>
               </div>
               
@@ -149,7 +185,9 @@ const Manufacturers = () => {
               </div>
               <div>
                 <h3 className="font-bold text-primary">{item.name}</h3>
-                <p className="text-xs text-gray-500">{item.id}</p>
+                <p className="text-xs text-gray-500">
+  {item.manufacturerId}
+</p>
               </div>
             </div>
             <div className="text-sm space-y-2">

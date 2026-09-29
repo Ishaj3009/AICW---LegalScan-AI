@@ -37,13 +37,37 @@ export const analyticsAPI = {
   getDashboard: () => api.get('/analytics/dashboard'),
 };
 
+export const manufacturersAPI = {
+  getAll: () => api.get('/manufacturers'),
+
+
+  create: (data) =>
+    api.post('/manufacturers', data),
+};
+
+export const rulesAPI = {
+  getAll: () => api.get('/rules'),
+
+  update: (id, data) =>
+    api.put(`/rules/${id}`, data),
+};
+
 export const violationsAPI = {
   getAll: (params) => api.get('/violations', { params }),
   review: (id, reviewData) => api.put(`/violations/${id}/review`, reviewData),
 };
 
 export const reportsAPI = {
-  generate: (inspectionId) => api.post(`/reports/${inspectionId}/generate`),
+  getAll: () => api.get('/reports'),
+
+  getById: (reportId) =>
+    api.get(`/reports/${reportId}`),
+
+  getByInspection: (inspectionId) =>
+    api.get(`/reports/inspection/${inspectionId}`),
+
+  generate: (inspectionId) =>
+    api.post(`/reports/${inspectionId}/generate`),
 };
 
 export default api;

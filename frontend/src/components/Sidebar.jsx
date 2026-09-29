@@ -1,69 +1,296 @@
+// import React from 'react';
+// import { NavLink, useNavigate } from 'react-router-dom';
+// import { Home, ScanSquare, ShieldAlert, Settings, FileText, BarChart2, Package, Building2, BookOpen } from 'lucide-react';
+// import { authAPI } from '../services/api';
+
+// const Sidebar = () => {
+//   const navigate = useNavigate();
+//   const user = JSON.parse(localStorage.getItem('user') || '{"name": "Officer Default", "role": "Enforcement"}');
+
+//   const navItems = [
+//     { name: 'Dashboard', path: '/dashboard', icon: Home },
+//     { name: 'New Inspection', path: '/inspect', icon: ScanSquare },
+//     { name: 'Inspection History', path: '/history', icon: FileText },
+//     { name: 'Violations', path: '/violations', icon: ShieldAlert },
+//     { name: 'Product Details', path: '/products', icon: Package },
+//     { name: 'Manufacturers', path: '/manufacturers', icon: Building2 },
+//     { name: 'Analytics', path: '/analytics', icon: BarChart2 },
+//     { name: 'Reports', path: '/reports', icon: FileText },
+//     { name: 'Rule Engine', path: '/rules', icon: BookOpen },
+//     { name: 'Settings', path: '/settings', icon: Settings },
+//   ];
+
+//   return (
+//     <aside className="w-64 h-screen bg-bg-card border-r border-border flex flex-col fixed left-0 top-0 overflow-y-auto shadow-sm">
+//       <div className="p-6 sticky top-0 bg-bg-card z-10 border-b border-border/50">
+//         <h1 className="text-2xl font-editorial font-bold tracking-tight text-primary">LegalScan AI</h1>
+//         <p className="text-[10px] text-accent mt-1 uppercase tracking-widest font-semibold">Gov Enforcement</p>
+//       </div>
+      
+//       <nav className="flex-1 px-4 py-6 space-y-1">
+//         {navItems.map((item) => {
+//           const Icon = item.icon;
+//           return (
+//             <NavLink
+//               key={item.name}
+//               to={item.path}
+//               className={({ isActive }) =>
+//                 `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 ${
+//                   isActive 
+//                     ? 'bg-primary text-white shadow-md' 
+//                     : 'text-gray-600 hover:bg-bg-soft hover:text-primary'
+//                 }`
+//               }
+//             >
+//               {({ isActive }) => (
+//                 <>
+//                   <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+//                   <span className="text-sm font-medium">{item.name}</span>
+//                 </>
+//               )}
+//             </NavLink>
+//           );
+//         })}
+//       </nav>
+      
+//       <div className="p-4 border-t border-border mt-auto sticky bottom-0 bg-bg-card">
+//         <div className="flex items-center gap-3 px-2 py-2">
+//           <div className="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center font-bold text-sm shadow-inner">
+//             {user.name ? user.name.substring(0, 2).toUpperCase() : 'OF'}
+//           </div>
+//           <div className="text-sm flex-1 overflow-hidden">
+//             <p className="font-semibold text-primary truncate">{user.name}</p>
+//             <p className="text-gray-500 text-xs truncate">{user.role}</p>
+//           </div>
+//         </div>
+//       </div>
+//     </aside>
+//   );
+// };
+
+// export default Sidebar;
+
+
+
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Home, ScanSquare, ShieldAlert, Settings, FileText, BarChart2, Package, Building2, BookOpen } from 'lucide-react';
+import {
+  Home,
+  ScanSquare,
+  ShieldAlert,
+  Settings,
+  FileText,
+  BarChart2,
+  Package,
+  Building2,
+  BookOpen,
+  LogOut
+} from 'lucide-react';
 import { authAPI } from '../services/api';
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user') || '{"name": "Officer Default", "role": "Enforcement"}');
+
+  const getUser = () => {
+    try {
+      return JSON.parse(
+        localStorage.getItem('user') ||
+        '{"name":"Officer Default","role":"OFFICER"}'
+      );
+    } catch {
+      return {
+        name: 'Officer Default',
+        role: 'OFFICER'
+      };
+    }
+  };
+
+  const user = getUser();
 
   const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: Home },
-    { name: 'New Inspection', path: '/inspect', icon: ScanSquare },
-    { name: 'Inspection History', path: '/history', icon: FileText },
-    { name: 'Violations', path: '/violations', icon: ShieldAlert },
-    { name: 'Product Details', path: '/products', icon: Package },
-    { name: 'Manufacturers', path: '/manufacturers', icon: Building2 },
-    { name: 'Analytics', path: '/analytics', icon: BarChart2 },
-    { name: 'Reports', path: '/reports', icon: FileText },
-    { name: 'Rule Engine', path: '/rules', icon: BookOpen },
-    { name: 'Settings', path: '/settings', icon: Settings },
+    {
+      name: 'Dashboard',
+      path: '/dashboard',
+      icon: Home
+    },
+    {
+      name: 'New Inspection',
+      path: '/inspect',
+      icon: ScanSquare
+    },
+    {
+      name: 'Inspection History',
+      path: '/history',
+      icon: FileText
+    },
+    {
+      name: 'Violations',
+      path: '/violations',
+      icon: ShieldAlert
+    },
+    {
+      name: 'Product Details',
+      path: '/products',
+      icon: Package
+    },
+    {
+      name: 'Manufacturers',
+      path: '/manufacturers',
+      icon: Building2
+    },
+    {
+      name: 'Analytics',
+      path: '/analytics',
+      icon: BarChart2
+    },
+    {
+      name: 'Reports',
+      path: '/reports',
+      icon: FileText
+    },
+    {
+      name: 'Rule Engine',
+      path: '/rules',
+      icon: BookOpen
+    },
+    {
+      name: 'Settings',
+      path: '/settings',
+      icon: Settings
+    }
   ];
+
+  const handleLogout = () => {
+    try {
+      // Remove authentication data
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+
+      // Also use existing API logout method
+      if (authAPI?.logout) {
+        authAPI.logout();
+      }
+
+      console.log('✅ Logged out successfully');
+      console.log('➡️ Redirecting to login...');
+
+      // Navigate to login
+      navigate('/login', {
+        replace: true
+      });
+
+    } catch (error) {
+      console.error('❌ Logout error:', error);
+
+      // Force cleanup even if something fails
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+
+      window.location.href = '/login';
+    }
+  };
 
   return (
     <aside className="w-64 h-screen bg-bg-card border-r border-border flex flex-col fixed left-0 top-0 overflow-y-auto shadow-sm">
+
+      {/* Logo */}
       <div className="p-6 sticky top-0 bg-bg-card z-10 border-b border-border/50">
-        <h1 className="text-2xl font-editorial font-bold tracking-tight text-primary">LegalScan AI</h1>
-        <p className="text-[10px] text-accent mt-1 uppercase tracking-widest font-semibold">Gov Enforcement</p>
+
+        <h1 className="text-2xl font-editorial font-bold tracking-tight text-primary">
+          LegalScan AI
+        </h1>
+
+        <p className="text-[10px] text-accent mt-1 uppercase tracking-widest font-semibold">
+          Gov Enforcement
+        </p>
+
       </div>
-      
+
+
+      {/* Navigation */}
       <nav className="flex-1 px-4 py-6 space-y-1">
+
         {navItems.map((item) => {
+
           const Icon = item.icon;
+
           return (
             <NavLink
               key={item.name}
               to={item.path}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 ${
-                  isActive 
-                    ? 'bg-primary text-white shadow-md' 
+                  isActive
+                    ? 'bg-primary text-white shadow-md'
                     : 'text-gray-600 hover:bg-bg-soft hover:text-primary'
                 }`
               }
             >
               {({ isActive }) => (
                 <>
-                  <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
-                  <span className="text-sm font-medium">{item.name}</span>
+                  <Icon
+                    size={18}
+                    strokeWidth={isActive ? 2.5 : 2}
+                  />
+
+                  <span className="text-sm font-medium">
+                    {item.name}
+                  </span>
                 </>
               )}
             </NavLink>
           );
         })}
+
       </nav>
-      
+
+
+      {/* User + Logout */}
       <div className="p-4 border-t border-border mt-auto sticky bottom-0 bg-bg-card">
+
         <div className="flex items-center gap-3 px-2 py-2">
+
+          {/* Avatar */}
           <div className="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center font-bold text-sm shadow-inner">
-            {user.name ? user.name.substring(0, 2).toUpperCase() : 'OF'}
+            {user.name
+              ? user.name.substring(0, 2).toUpperCase()
+              : 'OF'}
           </div>
+
+
+          {/* User Information */}
           <div className="text-sm flex-1 overflow-hidden">
-            <p className="font-semibold text-primary truncate">{user.name}</p>
-            <p className="text-gray-500 text-xs truncate">{user.role}</p>
+
+            <p className="font-semibold text-primary truncate">
+              {user.name || 'Officer Default'}
+            </p>
+
+            <p className="text-gray-500 text-xs truncate">
+              {user.role || 'OFFICER'}
+            </p>
+
           </div>
+
         </div>
+
+
+        {/* Logout Button */}
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all duration-200"
+        >
+
+          <LogOut size={17} />
+
+          <span className="text-sm font-medium">
+            Logout
+          </span>
+
+        </button>
+
       </div>
+
     </aside>
   );
 };

@@ -1,0 +1,69 @@
+const Manufacturer = require('../models/Manufacturer');
+
+// GET /api/manufacturers
+exports.getManufacturers = async (req, res) => {
+  try {
+    const manufacturers = await Manufacturer.find()
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      data: manufacturers
+    });
+  } catch (error) {
+    console.error('❌ Get manufacturers error:', error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to load manufacturers',
+      error: error.message
+    });
+  }
+};
+
+
+// POST /api/manufacturers
+exports.createManufacturer = async (req, res) => {
+  try {
+    const {
+      name,
+      location,
+      license,
+      status,
+      complianceScore
+    } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Manufacturer name is required'
+      });
+    }
+
+    const manufacturer = await Manufacturer.create({
+      manufacturerId: `MFG-${Date.now()}`,
+      name: name.trim(),
+      location: location || 'Unknown Location',
+      license: license || '',
+      status: status || 'Active',
+      complianceScore:
+        complianceScore !== undefined
+          ? complianceScore
+          : 0
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Manufacturer created successfully',
+      data: manufacturer
+    });
+  } catch (error) {
+    console.error('❌ Create manufacturer error:', error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create manufacturer',
+      error: error.message
+    });
+  }
+};

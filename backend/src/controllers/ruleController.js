@@ -5,7 +5,7 @@ const Rule = require('../models/Rule');
 // @access  Private
 exports.getRules = async (req, res, next) => {
   try {
-    const rules = await Rule.find({ enabled: true });
+    const rules = await Rule.find().sort({ ruleId: 1 });
     res.json({ success: true, data: rules });
   } catch (error) {
     next(error);
